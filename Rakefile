@@ -3,7 +3,7 @@ require 'rake/gempackagetask'
 require 'rake/rdoctask'
 
 spec = Gem::Specification.new do |s|
-  s.name = "small_swonder"
+  s.name = "small_wonder"
   s.version = "0.1"
   s.author = "Joe Williams"
   s.email = "j@boundary.com"
