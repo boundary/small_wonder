@@ -2,7 +2,7 @@
 
 Small Wonder is a deployment tool.
 
-Specifically it's a lightweight wrapper for Salticid, which is a tool that will run a bunch of commands on a bunch of machines for you. Kinda like capistrano. To a large extent Small Wonder is a means for using Salticid and Chef together to deploy applications. Salticid "roles" and "tasks" are Ruby code and can use the Chef Ruby APIs to search and access anything Chef Client or Knife can (by consuming your knife config). Small Wonder has a notion of an application object as well, this object contains data like the name, version, status and even the databag config data for an application. Name, version and status are saved back to the Chef node so you can use application specific details in your recipes, searches and etc.
+Specifically it's a lightweight wrapper for Salticid, which is a tool that will run a bunch of commands on a bunch of machines for you. Kinda like capistrano. To a large extent Small Wonder is a means for using Salticid and Chef together to deploy applications. Salticid "roles" and "tasks" are Ruby code and can use the Chef Ruby APIs to search and access anything Chef Client or Knife can (by consuming your knife config). Small Wonder has a notion of an application object as well, this object contains data like the name, version, status and even the databag config data for an application. Name, version and status are saved back to the Chef node so you can use application specific details in your recipes, searches and etc. This application object is available for use in your deployment code as well.
 
 ### License
 
