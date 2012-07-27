@@ -10,6 +10,10 @@ Apache License Version 2.0
 
 ### Usage
 
+#### Install
+
+    $ gem install small_wonder
+
 #### Configure
 
     $ mkdir ~/.small_wonder
