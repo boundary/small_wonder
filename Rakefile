@@ -14,7 +14,7 @@ spec = Gem::Specification.new do |s|
   s.require_path = "lib"
   s.has_rdoc = true
   s.extra_rdoc_files = ["README.md"]
-  %w{mixlib-config mixlib-cli mixlib-log excon yajl-ruby chef highline net-ssh net-scp salticid}.each { |gem| s.add_dependency gem }
+  %w{mixlib-config mixlib-cli mixlib-log excon yajl-ruby chef highline net-ssh net-scp salticid colorize}.each { |gem| s.add_dependency gem }
   s.bindir = "bin"
   s.executables = %w( small_wonder )
 end
