@@ -70,6 +70,8 @@ module SmallWonder
     ## deploy step
     # Creates a new salticid host for node, and calls <app>.deploy on it.
     def self.run_salticid_task(application, sudo_password)
+      SmallWonder::Log.info("Running #{application.application_name} deployment for #{application.node_name} ...")
+
       host = SmallWonder.salticid.host application.node_name
       host.on_log do |message|
         begin
