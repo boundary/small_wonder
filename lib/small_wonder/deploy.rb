@@ -40,6 +40,8 @@ module SmallWonder
         if input
           SmallWonder::Log.info("Commencing deployment.")
 
+          sudo_password = ::HighLine.ask("Your sudo password please:  ") { |q| q.echo = false }
+
           nodes.each do |node|
             if SmallWonder::Config.version
               SmallWonder::Log.info("Got version #{SmallWonder::Config.version} from a command line option, using it as the current version for #{SmallWonder::Config.app}.")
@@ -49,7 +51,7 @@ module SmallWonder
               application = SmallWonder::Application.new(node, application_name)
             end
 
-            deploy_application(application)
+            deploy_application(application, sudo_password)
           end
         end
       else
@@ -57,8 +59,8 @@ module SmallWonder
       end
     end
 
-    def self.deploy_application(application)
-      run_salticid_task(application)
+    def self.deploy_application(application, sudo_password)
+      run_salticid_task(application, sudo_password)
 
       if SmallWonder::Config.write_node_file
         SmallWonder::Utils.write_node_data_file(application.node_name)
@@ -67,7 +69,7 @@ module SmallWonder
 
     ## deploy step
     # Creates a new salticid host for node, and calls <app>.deploy on it.
-    def self.run_salticid_task(application)
+    def self.run_salticid_task(application, sudo_password)
       host = SmallWonder.salticid.host application.node_name
       host.on_log do |message|
         begin
@@ -81,15 +83,11 @@ module SmallWonder
       end
 
       host.application = application
-
       host.user SmallWonder::Config.ssh_user
-      @sudo_password = ::HighLine.ask("Your sudo password please:  ") { |q| q.echo = false }
-      host.password = @sudo_password
+      host.password = sudo_password
 
       # sub hyphens for underscores to work around having hyphens in method names
-
       host.role application.application_name.gsub("-", "_")
-
       host.send(application.application_name.gsub("-", "_")).deploy
 
       # set the application status to final since the deploy is done
