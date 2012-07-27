@@ -42,12 +42,16 @@ module SmallWonder
 
           sudo_password = ::HighLine.ask("Your sudo password please:  ") { |q| q.echo = false }
 
+          if SmallWonder::Config.version
+            SmallWonder::Log.info("Got version #{SmallWonder::Config.version} from a command line option, using it as the current version for #{SmallWonder::Config.app}.")
+          else
+            SmallWonder::Log.info("Did not get a app version to deploy on the command line, assuming you will set it during the deploy.")
+          end
+
           nodes.each do |node|
             if SmallWonder::Config.version
-              SmallWonder::Log.info("Got version #{SmallWonder::Config.version} from a command line option, using it as the current version for #{SmallWonder::Config.app}.")
               application = SmallWonder::Application.new(node, application_name, {:version => SmallWonder::Config.version})
             else
-              SmallWonder::Log.info("Did not get a app version to deploy on the command line, assuming you will set it during the deploy.")
               application = SmallWonder::Application.new(node, application_name)
             end
 
