@@ -1,7 +1,7 @@
 module SmallWonder
   class Configuratorator
 
-    def self.generate_and_upload_files(application, opts = {})
+    def self.generate_and_upload_files(application, path, opts = {})
       config_template_dir = "#{SmallWonder::Config.application_templates_dir}/#{application.application_name}"
 
       templates = Dir["#{config_template_dir}/**/*.erb"]
@@ -29,7 +29,7 @@ module SmallWonder
       end
 
       upload_files(application.node_name, application.application_name)
-      copy_files_to_install_dir(application.node_name, application.application_name, application.config_data["install"]["path"])
+      copy_files_to_install_dir(application.node_name, application.application_name, path)
       cleanup_working_directories(application.node_name, application.application_name)
 
       file_list
