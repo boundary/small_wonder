@@ -70,15 +70,11 @@ module SmallWonder
         SmallWonder::Config.application_deployments_dir, '**', '*.rb')))
 
       case SmallWonder::Config.action
-      when "none"
-        SmallWonder::Log.info("No action specified, assuming deploy ...")
-        SmallWonder::Deploy.run
-      when "deploy"
-        SmallWonder::Deploy.run
       when "vicki"
         system("open http://www.youtube.com/watch?v=ukSvjqwJixw")
       else
-        SmallWonder::Log.error("Supported action \"#{SmallWonder::Config.action}\"!")
+        SmallWonder::Log.info("Using specified action: #{SmallWonder::Config.action}")
+        SmallWonder::Deploy.run
       end
 
     end

@@ -3,7 +3,7 @@ module SmallWonder
     def self.run()
       if SmallWonder::Config.app
         nodes = SmallWonder::Deploy.node_query()
-        SmallWonder::Deploy.deploy(SmallWonder::Config.app, nodes)
+        SmallWonder::Deploy.run_action_task(SmallWonder::Config.action, SmallWonder::Config.app, nodes)
       else
         SmallWonder::Log.error("No application was specified for your deploy, use the '-p' switch.")
       end
@@ -27,7 +27,7 @@ module SmallWonder
       nodes
     end
 
-    def self.deploy(application_name, nodes)
+    def self.run_action_task(action, application_name, nodes)
       if nodes.length > 0
         SmallWonder::Log.info("Found the following nodes via your search.")
 
@@ -55,7 +55,7 @@ module SmallWonder
               application = SmallWonder::Application.new(node, application_name)
             end
 
-            deploy_application(application, sudo_password)
+            deploy_application(action, application, sudo_password)
           end
         end
       else
@@ -63,8 +63,8 @@ module SmallWonder
       end
     end
 
-    def self.deploy_application(application, sudo_password)
-      run_salticid_task(application, sudo_password)
+    def self.deploy_application(action, application, sudo_password)
+      run_salticid_task(action, application, sudo_password)
 
       if SmallWonder::Config.write_node_file
         SmallWonder::Utils.write_node_data_file(application.node_name)
@@ -73,7 +73,7 @@ module SmallWonder
 
     ## deploy step
     # Creates a new salticid host for node, and calls <app>.deploy on it.
-    def self.run_salticid_task(application, sudo_password)
+    def self.run_salticid_task(action, application, sudo_password)
       SmallWonder::Log.info("Running #{application.application_name} deployment for #{application.node_name} ...")
 
       host = SmallWonder.salticid.host application.node_name
@@ -94,7 +94,7 @@ module SmallWonder
 
       # sub hyphens for underscores to work around having hyphens in method names
       host.role application.application_name.gsub("-", "_")
-      host.send(application.application_name.gsub("-", "_")).deploy
+      host.send(application.application_name.gsub("-", "_")).__send__(action)
 
       # set the application status to final since the deploy is done
       application.status = "final"

@@ -1,4 +1,8 @@
 role :example do
+  task :sometask do
+    log "do something"
+  end
+
   task :deploy do # deploy is the default initial task called
     example.tasknumberone
     example.templatestuff

@@ -59,6 +59,10 @@ You can also specify a version number to pass to the application object:
 
     $ small_wonder -p example -V 123
 
+Lastly you can create user defined tasks that get run ("deploy" is the default):
+
+    $ small_wonder -p example -a sometask
+
 #### Chef Data
 
 During the deployment Small Wonder will save data back to the Chef node. Moreover, status is updated to the task currently being run, so you can see live deployment progress in your searches.

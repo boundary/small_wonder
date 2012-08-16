@@ -17,8 +17,8 @@ module SmallWonder
     option :action,
       :short => "-a ACTION",
       :long  => "--action ACTION",
-      :description => "The action you want small wonder to take [deploy]",
-      :default => "none"
+      :description => "The action you want small wonder to take [deploy|anythingyouwant]",
+      :default => "deploy"
 
     option :app,
       :short => "-p APP",
