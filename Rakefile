@@ -16,7 +16,7 @@ spec = Gem::Specification.new do |s|
   s.extra_rdoc_files = ["README.md"]
   %w{mixlib-config mixlib-cli mixlib-log excon yajl-ruby chef highline salticid net-ssh net-scp colorize}.each { |gem| s.add_dependency gem }
   s.bindir = "bin"
-  s.executables = %w( small_wonder )
+  s.executables = %w( small_wonder sw )
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|
