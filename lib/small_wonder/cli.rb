@@ -51,10 +51,22 @@ module SmallWonder
       :default => :info,
       :proc => Proc.new { |l| l.to_sym }
 
+    help = <<-EOH
+
+      Examples:
+      $ small_wonder -a deploy -p yourapp -q "attribute:something*" -V 123
+      $ small_wonder -p yourapp
+
+      Small Wonder's short hand CLI, fewer switches but you can still use them if you want
+      $ sw APPNAME ACTION [FQDN]
+      $ sw yourapp deploy
+      $ sw yourapp deploy testing01* -V 123 # same as 'small_wonder -a deploy -p yourapp -q "fqdn:testing01*" -V 123'
+    EOH
+
     option :help,
       :short => "-h",
       :long => "--help",
-      :description => "All the help you need ...",
+      :description => help,
       :on => :tail,
       :boolean => true,
       :show_options => true,

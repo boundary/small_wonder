@@ -39,13 +39,43 @@ module SmallWonder
       @salticid
     end
 
-    def main()
+    def long_main()
 
       cli = SmallWonder::CLI.new
       cli.parse_options
 
       # consume small wonder config
       SmallWonder::Utils.consume_config_file(cli, cli.config[:config_file])
+
+      # consume knife config
+      SmallWonder::Utils.consume_config_file(cli, cli.config[:knife_config_file])
+
+      main()
+    end
+
+    def short_main()
+
+      cli = SmallWonder::CLI.new
+      cli.parse_options
+
+      # consume small wonder config
+      SmallWonder::Utils.consume_config_file(cli, cli.config[:config_file])
+
+      # consume knife config
+      SmallWonder::Utils.consume_config_file(cli, cli.config[:knife_config_file])
+
+      # sw facade deploy [fqdn]
+      SmallWonder::Config.app = ARGV[0]
+      SmallWonder::Config.action = ARGV[1]
+
+      if ARGV[2]
+        SmallWonder::Config.query = "fqdn:#{ARGV[2]}"
+      end
+
+      main()
+    end
+
+    def main()
 
       unless SmallWonder::Utils.sane_working_dir?(SmallWonder::Config.remote_working_dir)
         SmallWonder::Log.error("Your remote working dir looks strange (#{SmallWonder::Config.remote_working_dir})")
@@ -56,8 +86,6 @@ module SmallWonder
         SmallWonder::Log.error("Your local working dir looks strange (#{SmallWonder::Config.config_template_working_directory})")
         exit(1)
       end
-
-      SmallWonder::Utils.consume_config_file(cli, cli.config[:knife_config_file])
 
       # inintialize chef/knife config
       Chef::Config[:node_name] = SmallWonder::Config.node_name
