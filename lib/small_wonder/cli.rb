@@ -51,6 +51,24 @@ module SmallWonder
       :default => :info,
       :proc => Proc.new { |l| l.to_sym }
 
+    option :config_template_working_directory,
+      :short => "-D",
+      :long  => "--working-dir",
+      :description => "local config template working directory",
+      :default => Dir.mktmpdir
+
+    option :remote_working_dir,
+      :short => "-R",
+      :long  => "--remote-working-dir",
+      :description => "remote config template working directory",
+      :default => "/tmp/small_wonder_#{Time.now.to_i}"
+
+    option :dynamic_metadata,
+      :short => "-M JSON",
+      :long  => "--metadata JSON",
+      :description => "Metadata JSON",
+      :default => nil
+
     help = <<-EOH
 
       Examples:

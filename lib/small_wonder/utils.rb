@@ -36,27 +36,5 @@ module SmallWonder
       end
     end
 
-    def self.sane_working_dir?(dir)
-      sane = []
-      sane << starts_with?(dir, "/tmp/small_wonder")
-
-      if dir.include?("..")
-        sane << false
-      else
-        sane << true
-      end
-
-      if sane.include?(false)
-        false
-      else
-        true
-      end
-    end
-
-    def self.starts_with?(string, prefix)
-      prefix = prefix.to_s
-      string[0, prefix.length] == prefix
-    end
-
   end
 end
