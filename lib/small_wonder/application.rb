@@ -56,16 +56,6 @@ module SmallWonder
 
     private
 
-    def get_existing_version(node, application)
-      version = get_chef_data_value(node, application, "version")
-
-      unless version
-        version = "0"
-      end
-
-      version
-    end
-
     def set_version(node, application, version)
       update_application_data(node, application, "version", version)
     end
