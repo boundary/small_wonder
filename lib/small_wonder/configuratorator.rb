@@ -21,7 +21,7 @@ module SmallWonder
 
         generated_file = generate_file(file, application, config_template_dir, opts)
 
-        file_dir = "#{SmallWonder::Config.config_template_working_directory}/#{application.application_name}/#{reldir}"
+        file_dir = "#{SmallWonder::Config.config_template_working_directory}/#{application.node_name}/#{application.application_name}/#{reldir}"
 
         FileUtils.mkdir_p(file_dir)
 
@@ -29,10 +29,16 @@ module SmallWonder
       end
 
       upload_files(application.node_name, application.application_name)
-      copy_files_to_install_dir(application.node_name, application.application_name, path)
-      cleanup_working_directories(application.node_name, application.application_name)
 
       file_list
+    end
+
+    def self.apply_files(application, path, opts = {:cleanup => true})
+      copy_files_to_install_dir(application.node_name, application.application_name, path)
+
+      if opts[:cleanup]
+        cleanup_working_directories(application.node_name, application.application_name)
+      end
     end
 
     private
@@ -66,7 +72,7 @@ module SmallWonder
       end
 
       Net::SCP.start(node_name, SmallWonder::Config.ssh_user) do |scp|
-        scp.upload!("#{SmallWonder::Config.config_template_working_directory}/#{application}", SmallWonder::Config.remote_working_dir, {:recursive => true})
+        scp.upload!("#{SmallWonder::Config.config_template_working_directory}/#{node_name}/#{application}", SmallWonder::Config.remote_working_dir, {:recursive => true})
       end
     end
 
@@ -77,7 +83,7 @@ module SmallWonder
     end
 
     def self.cleanup_working_directories(node_name, application)
-      FileUtils.rm_rf("#{SmallWonder::Config.config_template_working_directory}/#{application}")
+      FileUtils.rm_rf("#{SmallWonder::Config.config_template_working_directory}/#{node_name}/#{application}")
 
       Net::SSH.start(node_name, SmallWonder::Config.ssh_user) do |ssh|
         ssh.exec!("rm -rf #{SmallWonder::Config.remote_working_dir}")
