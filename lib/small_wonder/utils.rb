@@ -23,40 +23,5 @@ module SmallWonder
       write_file(JSON.pretty_generate(data), file)
     end
 
-    def self.write_file(data, path)
-      begin
-        file = File.new(path,"w")
-        file.puts data
-      rescue Exception => e
-        SmallWonder::Log.error("Error writing file (#{path}).")
-        SmallWonder::Log.error(e)
-        exit(1)
-      ensure
-        file.close
-      end
-    end
-
-    def self.sane_working_dir?(dir)
-      sane = []
-      sane << starts_with?(dir, "/tmp/small_wonder")
-
-      if dir.include?("..")
-        sane << false
-      else
-        sane << true
-      end
-
-      if sane.include?(false)
-        false
-      else
-        true
-      end
-    end
-
-    def self.starts_with?(string, prefix)
-      prefix = prefix.to_s
-      string[0, prefix.length] == prefix
-    end
-
   end
 end

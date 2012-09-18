@@ -78,16 +78,6 @@ module SmallWonder
 
     def main()
 
-      #unless SmallWonder::Utils.sane_working_dir?(SmallWonder::Config.remote_working_dir)
-      #  SmallWonder::Log.error("Your remote working dir looks strange (#{SmallWonder::Config.remote_working_dir})")
-      #  exit(1)
-      #end
-
-      #unless SmallWonder::Utils.sane_working_dir?(SmallWonder::Config.config_template_working_directory)
-      #  SmallWonder::Log.error("Your local working dir looks strange (#{SmallWonder::Config.config_template_working_directory})")
-      #  exit(1)
-      #end
-
       # inintialize chef/knife config
       Chef::Config[:node_name] = SmallWonder::Config.node_name
       Chef::Config[:client_key] = SmallWonder::Config.client_key
