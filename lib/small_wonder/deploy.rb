@@ -48,11 +48,13 @@ module SmallWonder
             SmallWonder::Log.info("Did not get a app version to deploy on the command line, assuming you will set it during the deploy.")
           end
 
+          metadata = build_metadata(SmallWonder::Config.default_metadata, SmallWonder::Config.dynamic_metadata)
+
           nodes.each do |node|
             if SmallWonder::Config.version
-              application = SmallWonder::Application.new(node, application_name, {:version => SmallWonder::Config.version})
+              application = SmallWonder::Application.new(node, application_name, {:version => SmallWonder::Config.version, :metadata => metadata})
             else
-              application = SmallWonder::Application.new(node, application_name)
+              application = SmallWonder::Application.new(node, application_name, {:metadata => metadata})
             end
 
             deploy_application(action, application, sudo_password)
@@ -69,6 +71,20 @@ module SmallWonder
       if SmallWonder::Config.write_node_file
         SmallWonder::Utils.write_node_data_file(application.node_name)
       end
+    end
+
+    def self.build_metadata(default = nil, dynamic = nil)
+      metadata = Hash.new
+
+      if default
+        metadata.store("default", default)
+      end
+
+      if dynamic
+        metadata.store("dynamic", JSON.parse(dynamic))
+      end
+
+      metadata
     end
 
     ## deploy step

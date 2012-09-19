@@ -42,6 +42,11 @@ module SmallWonder
 
       # save the data back to the chef node
       update_application_data(node_name, application_name, "status", "initialized")
+
+      # save metadata back to chef
+      if opts[:metadata]
+        update_application_data(node_name, application_name, "data", opts[:metadata])
+      end
     end
 
     def version=(version)
