@@ -50,6 +50,10 @@ module SmallWonder
 
           metadata = build_metadata(SmallWonder::Config.default_metadata, SmallWonder::Config.dynamic_metadata)
 
+          execute_pre_deploy_hooks(action, application_name, metadata, nodes, SmallWonder::Config.version)
+
+          application_objects = []
+
           nodes.each do |node|
             if SmallWonder::Config.version
               application = SmallWonder::Application.new(node, application_name, {:version => SmallWonder::Config.version, :metadata => metadata})
@@ -58,7 +62,11 @@ module SmallWonder
             end
 
             deploy_application(action, application, sudo_password)
+            application_objects << application
           end
+
+          execute_post_deploy_hooks(action, application_name, metadata, nodes, application_objects, SmallWonder::Config.version)
+
         end
       else
         SmallWonder::Log.info("No nodes found for your search.")
@@ -85,6 +93,66 @@ module SmallWonder
       end
 
       metadata
+    end
+
+    def self.build_hook_data(action, application_name, metadata, nodes, application_objects = nil, version = nil)
+      if application_objects
+        objs = []
+
+        application_objects.each do |obj|
+          hash = {}
+
+          obj.instance_variables.each do |var|
+            hash.store(var.to_s.delete("@"), obj.instance_variable_get(var))
+          end
+
+          objs << hash
+        end
+      end
+
+      {
+        "action" => action,
+        "application_name" => application_name,
+        "metadata" => metadata,
+        "nodes" => nodes,
+        "version" => version,
+        "application" => objs
+      }
+    end
+
+    def self.execute_pre_deploy_hooks(action, application_name, metadata, nodes, version)
+      data = build_hook_data(action, application_name, metadata, nodes, version)
+      execute_hooks(:pre, data)
+    end
+
+    def self.execute_post_deploy_hooks(action, application_name, metadata, nodes, application_objects, version)
+      data = build_hook_data(action, application_name, metadata, nodes, application_objects, version)
+      execute_hooks(:post, data)
+    end
+
+    def self.execute_hooks(type, data)
+      data_json = data.to_json
+
+      case type
+      when :pre
+        hooks = SmallWonder::Config.pre_deploy_hooks
+      when :post
+        hooks = SmallWonder::Config.post_deploy_hooks
+      end
+
+      if hooks
+        hooks.each do |cmd|
+          begin
+            SmallWonder::Log.info("Running #{type} deploy hook, command: #{cmd}")
+            output = `#{cmd} \'#{data_json}\'`
+            SmallWonder::Log.debug("#{type} deploy hook output:")
+            SmallWonder::Log.debug(output)
+          rescue Exception => e
+            SmallWonder::Log.fatal("#{type} deploy hook failed, command: #{cmd}, data: #{data_json}")
+          end
+        end
+      end
+
     end
 
     ## deploy step
