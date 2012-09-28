@@ -27,6 +27,8 @@ Apache License Version 2.0
     application_templates_dir           "/path/to/chef-repo/application_templates" # path to your template files
     databag                             "apps" # the databag that contains application configuration data items
     default_metadata                     Hash["timestamp" => Time.now.to_i, "deploy_by" => ENV['USER']] # metadata saved to chef with each deploy
+    pre_deploy_hooks ["/path/to/a/hook/example.rb"]
+    post_deploy_hooks ["/path/to/a/hook/example.rb"]
 
 In addition to a Small Wonder config, you need a working Knife configuration file.
 
