@@ -3,7 +3,7 @@ module SmallWonder
 
     def self.generate_and_upload_files(application, path, opts = {})
       file_list = generate_files(application, path, opts)
-      upload_files(application.node_name, application.application_name)
+      upload_files(application)
       apply_files(application, path, opts)
       file_list
     end
@@ -38,13 +38,13 @@ module SmallWonder
       file_list
     end
 
-    def self.upload_files(node_name, application)
-      Net::SSH.start(node_name, SmallWonder::Config.ssh_user) do |ssh|
+    def self.upload_files(application)
+      Net::SSH.start(application.node_name, SmallWonder::Config.ssh_user) do |ssh|
         ssh.exec!("mkdir -p #{SmallWonder::Config.remote_working_dir}")
       end
 
-      Net::SCP.start(node_name, SmallWonder::Config.ssh_user) do |scp|
-        scp.upload!("#{SmallWonder::Config.config_template_working_directory}/#{node_name}/#{application}", SmallWonder::Config.remote_working_dir, {:recursive => true})
+      Net::SCP.start(application.node_name, SmallWonder::Config.ssh_user) do |scp|
+        scp.upload!("#{SmallWonder::Config.config_template_working_directory}/#{application.node_name}/#{application.application_name}", SmallWonder::Config.remote_working_dir, {:recursive => true})
       end
     end
 
