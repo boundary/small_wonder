@@ -2,9 +2,10 @@ module SmallWonder
   class Configuratorator
 
     def self.generate_and_upload_files(application, path, opts = {})
-      generate_files(application, path, opts)
+      file_list = generate_files(application, path, opts)
       upload_files(application.node_name, application.application_name)
       apply_files(application, path, opts)
+      file_list
     end
 
     def self.generate_files(application, path, opts = {})
