@@ -2,6 +2,12 @@ module SmallWonder
   class Configuratorator
 
     def self.generate_and_upload_files(application, path, opts = {})
+      generate_files(application, path, opts)
+      upload_files(application.node_name, application.application_name)
+      apply_files(application, path, opts)
+    end
+
+    def self.generate_files(application, path, opts = {})
       config_template_dir = "#{SmallWonder::Config.application_templates_dir}/#{application.application_name}"
 
       templates = Dir["#{config_template_dir}/**/*.erb"]
@@ -28,15 +34,23 @@ module SmallWonder
         SmallWonder::Utils.write_file(generated_file, "#{file_dir}/#{filename}")
       end
 
-      upload_files(application.node_name, application.application_name)
-
       file_list
     end
 
-    def self.apply_files(application, path, opts = {:cleanup => true})
+    def self.upload_files(node_name, application)
+      Net::SSH.start(node_name, SmallWonder::Config.ssh_user) do |ssh|
+        ssh.exec!("mkdir -p #{SmallWonder::Config.remote_working_dir}")
+      end
+
+      Net::SCP.start(node_name, SmallWonder::Config.ssh_user) do |scp|
+        scp.upload!("#{SmallWonder::Config.config_template_working_directory}/#{node_name}/#{application}", SmallWonder::Config.remote_working_dir, {:recursive => true})
+      end
+    end
+
+    def self.apply_files(application, path, opts = {})
       copy_files_to_install_dir(application.node_name, application.application_name, path)
 
-      if opts[:cleanup]
+      if opts[:no_cleanup]
         cleanup_working_directories(application.node_name, application.application_name)
       end
     end
@@ -64,16 +78,6 @@ module SmallWonder
       end
 
       template.result(binding)
-    end
-
-    def self.upload_files(node_name, application)
-      Net::SSH.start(node_name, SmallWonder::Config.ssh_user) do |ssh|
-        ssh.exec!("mkdir -p #{SmallWonder::Config.remote_working_dir}")
-      end
-
-      Net::SCP.start(node_name, SmallWonder::Config.ssh_user) do |scp|
-        scp.upload!("#{SmallWonder::Config.config_template_working_directory}/#{node_name}/#{application}", SmallWonder::Config.remote_working_dir, {:recursive => true})
-      end
     end
 
     def self.copy_files_to_install_dir(node_name, application, path)
