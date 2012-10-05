@@ -16,11 +16,16 @@ module SmallWonder
       file_list = []
 
       templates.each do |file|
-        filename = File.basename(file, '.*')
-        filename.gsub!("VERSION", application.version)
+        begin
+          filename = File.basename(file, '.*')
+          filename.gsub!("VERSION", application.version)
 
-        reldir = File.dirname(file).gsub("#{config_template_dir}", ".")
-        reldir.gsub!("VERSION", application.version)
+          reldir = File.dirname(file).gsub("#{config_template_dir}", ".")
+          reldir.gsub!("VERSION", application.version)
+        rescue Exception => e
+          SmallWonder::Log.fatal("Something went badly attempting to replace VERSION with the version number, likely missing version data.\nerror: #{e}")
+          exit(1)
+        end
 
         file_list << "#{reldir}/#{filename}"
 
