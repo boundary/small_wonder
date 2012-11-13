@@ -80,20 +80,20 @@ module SmallWonder
 
     def create_application_deployment_attribute(node, application)
       data = Chef::Node.load(node)
-      data[SmallWonder::Config.application_deployment_attribute] = {}
-      data[SmallWonder::Config.application_deployment_attribute][application] = {}
+      data.set[SmallWonder::Config.application_deployment_attribute] = {}
+      data.set[SmallWonder::Config.application_deployment_attribute][application] = {}
       data.save
     end
 
     def create_application_deployment_attribute_child(node, application)
       data = Chef::Node.load(node)
-      data[SmallWonder::Config.application_deployment_attribute][application] = {}
+      data.set[SmallWonder::Config.application_deployment_attribute][application] = {}
       data.save
     end
 
     def update_application_data(node, application, key, value)
       data = Chef::Node.load(node)
-      data[SmallWonder::Config.application_deployment_attribute][application][key] = value
+      data.set[SmallWonder::Config.application_deployment_attribute][application][key] = value
       data.save
 
       #SmallWonder::Log.info("[#{node} // #{application}] #{key} was updated to #{value}")
