@@ -3,7 +3,10 @@ module SmallWonder
     def self.run()
       if SmallWonder::Config.app
         nodes = SmallWonder::Deploy.node_query()
-        SmallWonder::Deploy.run_action_task(SmallWonder::Config.action, SmallWonder::Config.app, nodes)
+
+        action = SmallWonder::Config.action.split(",")
+
+        SmallWonder::Deploy.run_action_task(action, SmallWonder::Config.app, nodes)
       else
         SmallWonder::Log.error("No application was specified for your deploy, use the '-p' switch.")
       end
@@ -178,7 +181,10 @@ module SmallWonder
 
       # sub hyphens for underscores to work around having hyphens in method names
       host.role application.application_name.gsub("-", "_")
-      host.send(application.application_name.gsub("-", "_")).__send__(action)
+
+      action.each do |x|
+        host.send(application.application_name.gsub("-", "_")).__send__(x)
+      end
 
       # set the application status to final since the deploy is done
       application.status = "final"

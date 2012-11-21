@@ -64,6 +64,11 @@ Lastly you can create user defined tasks that get run ("deploy" is the default):
 
     $ small_wonder -p example -a sometask
 
+Or you can specify multiple tasks using commas:
+
+    $ small_wonder -p example -a sometask,someothertask,athirdtask
+
+
 #### Chef Data
 
 During the deployment Small Wonder will save data back to the Chef node. Moreover, status is updated to the task currently being run, so you can see live deployment progress in your searches.

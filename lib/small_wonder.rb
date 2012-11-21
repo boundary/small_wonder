@@ -92,7 +92,7 @@ module SmallWonder
       when "vicki"
         system("open http://www.youtube.com/watch?v=ukSvjqwJixw")
       else
-        SmallWonder::Log.info("Using specified action: #{SmallWonder::Config.action}")
+        SmallWonder::Log.info("Using specified action(s): #{SmallWonder::Config.action}")
         SmallWonder::Deploy.run
       end
 
