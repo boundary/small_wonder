@@ -45,6 +45,8 @@ module SmallWonder
 
           sudo_password = ::HighLine.ask("Your sudo password please:  ") { |q| q.echo = false }
 
+          SmallWonder::Config.sudo_password = sudo_password
+
           if SmallWonder::Config.version
             SmallWonder::Log.info("Got version #{SmallWonder::Config.version} from a command line option, using it as the current version for #{SmallWonder::Config.app}.")
           else
