@@ -88,11 +88,7 @@ module SmallWonder
 
     def self.copy_files_to_install_dir(node_name, application, path)
       Net::SSH.start(node_name, SmallWonder::Config.ssh_user) do |ssh|
-        ssh.exec!("sudo -S cp -Rf #{SmallWonder::Config.remote_working_dir}/#{application}/* /#{path}/") do |chan, strm, data|
-          if data =~ /^\[sudo\] password for user:/
-            channel.send_data SmallWonder::Config.sudo_password
-          end
-        end
+        ssh.exec!("echo \"#{SmallWonder::Config.sudo_password}\n\" | sudo -S cp -Rf #{SmallWonder::Config.remote_working_dir}/#{application}/* /#{path}/")
       end
     end
 
