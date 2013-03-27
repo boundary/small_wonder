@@ -90,7 +90,7 @@ module SmallWonder
       Net::SSH.start(node_name, SmallWonder::Config.ssh_user) do |ssh|
         ssh.exec!("sudo -S cp -Rf #{SmallWonder::Config.remote_working_dir}/#{application}/* /#{path}/") do |chan, strm, data|
           if data =~ /^\[sudo\] password for user:/
-            chan.send_data SmallWonder::Config.sudo_password
+            channel.send_data SmallWonder::Config.sudo_password
           end
         end
       end
