@@ -23,8 +23,8 @@ Apache License Version 2.0
     chef_repo_path                      "/path/to/chef-repo" # the path to your chef-repo
     ssh_user                            "user" # the ssh user you want Small Wonder and Salticid to use
     application_deployment_attribute    "deployed_applications" # the attribute Small Wonder will save data back to chef using
-    application_deployments_dir         "/path/to/chef-repo/application_deployments" # path to your role files
-    application_templates_dir           "/path/to/chef-repo/application_templates" # path to your template files
+    application_deployments_dir         "#{chef_repo_path}/application_deployments" # path to your role files
+    application_templates_dir           "#{chef_repo_path}/application_templates" # path to your template files
     databag                             "apps" # the databag that contains application configuration data items
     default_metadata                     Hash["timestamp" => Time.now.to_i, "deploy_by" => ENV['USER']] # metadata saved to chef with each deploy
     pre_deploy_hooks ["/path/to/a/hook/example.rb"]
