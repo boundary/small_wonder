@@ -101,9 +101,8 @@ module SmallWonder
     end
 
     def self.build_hook_data(action, application_name, metadata, nodes, application_objects = nil, version = nil)
+      objs = []
       if application_objects
-        objs = []
-
         application_objects.each do |obj|
           hash = {}
 
@@ -126,7 +125,7 @@ module SmallWonder
     end
 
     def self.execute_pre_deploy_hooks(action, application_name, metadata, nodes, version)
-      data = build_hook_data(action, application_name, metadata, nodes, version)
+      data = build_hook_data(action, application_name, metadata, nodes, nil, version)
       execute_hooks(:pre, data)
     end
 
